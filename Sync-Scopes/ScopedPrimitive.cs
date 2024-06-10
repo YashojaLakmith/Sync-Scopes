@@ -2,7 +2,7 @@
 
 namespace Sync_Scopes
 {
-    public abstract class ScopedPrimitive : IDisposable
+    public abstract class ScopedPrimitive : IDisposable, ILockReleaser
     {
         protected bool disposedValue;
 
@@ -16,13 +16,9 @@ namespace Sync_Scopes
 
         public abstract SynchronizationScope CreateScope(TimeSpan timeout, bool exitContext);
 
-        protected abstract void OnScopeRelease(object? sender, EventArgs e);
-
         protected SynchronizationScope CreateNewScopeObject()
         {
-            var scope = new SynchronizationScope();
-            scope.ScopeEnded += OnScopeRelease;
-            return scope;
+            return new SynchronizationScope(this);
         }
 
         protected virtual void Dispose(bool disposing)
@@ -42,5 +38,7 @@ namespace Sync_Scopes
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
+
+        public abstract void ReleaseLock();
     }
 }

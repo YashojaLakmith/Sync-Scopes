@@ -4,18 +4,26 @@ namespace Sync_Scopes
 {
     public struct SynchronizationScope : IDisposable
     {
-        internal event EventHandler? ScopeEnded;
+        private ILockReleaser? _lockReleaser;
+        private bool _disposed;
+
+        internal SynchronizationScope(ILockReleaser lockReleaser)
+        {
+            _lockReleaser = lockReleaser;
+            _disposed = false;
+        }
 
         public void Dispose()
         {
-            OnScopeEnd();
-            ScopeEnded = null;
-            GC.SuppressFinalize(this);
-        }
+            if (!_disposed)
+            {
+                return;
+            }
 
-        private readonly void OnScopeEnd()
-        {
-            ScopeEnded?.Invoke(this, EventArgs.Empty);
+            _lockReleaser?.ReleaseLock();
+            _disposed = true;
+            _lockReleaser = null;
+            GC.SuppressFinalize(this);
         }
     }
 }

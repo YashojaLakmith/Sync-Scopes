@@ -34,12 +34,12 @@ namespace Sync_Scopes
             throw new NotImplementedException();
         }
 
-        protected override void OnScopeRelease(object? sender, EventArgs e)
+        public override void ReleaseLock()
         {
             if (_lockTaken)
             {
                 Monitor.Exit(_lock);
             }
-        }       
+        }
     }
 }

@@ -47,11 +47,6 @@ namespace Sync_Scopes
             return CreateNewScopeObject();
         }
 
-        protected override void OnScopeRelease(object? sender, EventArgs e)
-        {
-            _semaphore.Release();
-        }
-
         protected override void Dispose(bool disposing)
         {
             if (disposedValue)
@@ -62,6 +57,11 @@ namespace Sync_Scopes
                 }
                 disposedValue = true;
             }
+        }
+
+        public override void ReleaseLock()
+        {
+            _semaphore.Release();
         }
     }
 }
