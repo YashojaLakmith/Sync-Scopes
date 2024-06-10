@@ -2,7 +2,7 @@
 
 namespace Sync_Scopes
 {
-    public abstract class ScopedPrimitive : IDisposable, ILockReleaser
+    public abstract class ScopedPrimitive : ILockReleaser, IDisposable
     {
         protected bool disposedValue;
 
