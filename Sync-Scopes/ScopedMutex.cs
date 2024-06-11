@@ -19,48 +19,33 @@ namespace Sync_Scopes
 
         public override SynchronizationScope CreateScope()
         {
+            base.ThrowIfDisposed();
             _mutex.WaitOne();
-            return CreateNewScopeObject();
-        }
-
-        public override SynchronizationScope CreateScope(int milisecondTimeout)
-        {
-            _mutex.WaitOne(milisecondTimeout);
-            return CreateNewScopeObject();
-        }
-
-        public override SynchronizationScope CreateScope(TimeSpan timeout)
-        {
-            _mutex.WaitOne(timeout);
-            return CreateNewScopeObject();
-        }
-
-        public override SynchronizationScope CreateScope(int milisecondTimeout, bool exitContext)
-        {
-            _mutex.WaitOne(milisecondTimeout, exitContext);
-            return CreateNewScopeObject();
-        }
-
-        public override SynchronizationScope CreateScope(TimeSpan timeout, bool exitContext)
-        {
-            _mutex.WaitOne(timeout, exitContext);
-            return CreateNewScopeObject();
-        }
-
-        public override void ReleaseLock()
-        {
-            _mutex.ReleaseMutex();
+            return base.CreateNewScopeObject();
         }
 
         protected override void Dispose(bool disposing)
         {
-            if (disposedValue)
+            if (base.disposedValue)
             {
                 if (disposing)
                 {
                     _mutex.Dispose();
                 }
-                disposedValue = true;
+                base.disposedValue = true;
+            }
+        }
+
+        protected override void OnScopeEnded(object? sender, EventArgs e)
+        {
+            _mutex.ReleaseMutex();
+        }
+
+        ~ScopedMutex()
+        {
+            if (!base.disposedValue)
+            {
+                base.Dispose(true);
             }
         }
     }

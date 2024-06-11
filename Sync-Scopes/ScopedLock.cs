@@ -10,35 +10,40 @@ namespace Sync_Scopes
 
         public override SynchronizationScope CreateScope()
         {
+            base.ThrowIfDisposed();
             Monitor.Enter(_lock, ref _lockTaken);
-            return CreateNewScopeObject();
+            return base.CreateNewScopeObject();
         }
 
-        public override SynchronizationScope CreateScope(int milisecondTimeout)
+        protected override void Dispose(bool disposing)
         {
-            throw new NotImplementedException();
+            if (!base.disposedValue)
+            {
+                if (disposing)
+                {
+                    if (_lockTaken)
+                    {
+                        Monitor.Exit(_lock);
+                    }
+                }
+                base.disposedValue = true;
+            }
         }
 
-        public override SynchronizationScope CreateScope(TimeSpan timeout)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override SynchronizationScope CreateScope(int milisecondTimeout, bool exitContext)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override SynchronizationScope CreateScope(TimeSpan timeout, bool exitContext)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void ReleaseLock()
+        protected override void OnScopeEnded(object? sender, EventArgs e)
         {
             if (_lockTaken)
             {
                 Monitor.Exit(_lock);
+                _lockTaken = false;
+            }
+        }
+
+        ~ScopedLock()
+        {
+            if (!base.disposedValue)
+            {
+                base.Dispose(true);
             }
         }
     }

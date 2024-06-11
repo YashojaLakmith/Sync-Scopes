@@ -1,5 +1,5 @@
-﻿using System.Threading;
-using System;
+﻿using System;
+using System.Threading;
 
 namespace Sync_Scopes
 {
@@ -19,32 +19,9 @@ namespace Sync_Scopes
 
         public override SynchronizationScope CreateScope()
         {
+            base.ThrowIfDisposed();
             _semaphore.WaitOne();
-            return CreateNewScopeObject();
-        }
-
-        public override SynchronizationScope CreateScope(int milisecondTimeout)
-        {
-            _semaphore.WaitOne(milisecondTimeout);
-            return CreateNewScopeObject();
-        }
-
-        public override SynchronizationScope CreateScope(TimeSpan timeout)
-        {
-            _semaphore.WaitOne(timeout);
-            return CreateNewScopeObject();
-        }
-
-        public override SynchronizationScope CreateScope(int milisecondTimeout, bool exitContext)
-        {
-            _semaphore.WaitOne(milisecondTimeout, exitContext);
-            return CreateNewScopeObject();
-        }
-
-        public override SynchronizationScope CreateScope(TimeSpan timeout, bool exitContext)
-        {
-            _semaphore.WaitOne(timeout, exitContext);
-            return CreateNewScopeObject();
+            return base.CreateNewScopeObject();
         }
 
         protected override void Dispose(bool disposing)
@@ -59,9 +36,17 @@ namespace Sync_Scopes
             }
         }
 
-        public override void ReleaseLock()
+        protected override void OnScopeEnded(object? sender, EventArgs e)
         {
             _semaphore.Release();
+        }
+
+        ~ScopedSemaphore()
+        {
+            if (!base.disposedValue)
+            {
+                base.Dispose(true);
+            }
         }
     }
 }

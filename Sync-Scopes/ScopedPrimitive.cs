@@ -2,23 +2,25 @@
 
 namespace Sync_Scopes
 {
-    public abstract class ScopedPrimitive : ILockReleaser, IDisposable
+    public abstract class ScopedPrimitive : IDisposable
     {
         protected bool disposedValue;
 
         public abstract SynchronizationScope CreateScope();
 
-        public abstract SynchronizationScope CreateScope(int milisecondTimeout);
-
-        public abstract SynchronizationScope CreateScope(TimeSpan timeout);
-
-        public abstract SynchronizationScope CreateScope(int milisecondTimeout, bool exitContext);
-
-        public abstract SynchronizationScope CreateScope(TimeSpan timeout, bool exitContext);
-
         protected SynchronizationScope CreateNewScopeObject()
         {
-            return new SynchronizationScope(this);
+            var scope = new SynchronizationScope();
+            scope.ScopeEnded += OnScopeEnded;
+            return scope;
+        }
+
+        protected void ThrowIfDisposed()
+        {
+            if (disposedValue)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
         }
 
         protected virtual void Dispose(bool disposing)
@@ -39,6 +41,6 @@ namespace Sync_Scopes
             GC.SuppressFinalize(this);
         }
 
-        public abstract void ReleaseLock();
+        protected abstract void OnScopeEnded(object? sender, EventArgs e);
     }
 }
