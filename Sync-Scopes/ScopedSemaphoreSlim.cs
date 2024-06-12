@@ -3,18 +3,39 @@ using System.Threading;
 
 namespace Sync_Scopes
 {
+    /// <summary>
+    /// Encapsulates a <see cref="SemaphoreSlim"/>.
+    /// </summary>
     public class ScopedSemaphoreSlim : ScopedPrimitive
     {
         private readonly SemaphoreSlim _semaphore;
 
-        public ScopedSemaphoreSlim(int initialCount)
+        /// <summary>
+        /// Creates an instance using a default <see cref="SemaphoreSlim"/> specifying the number of initial entries and the number of maximum concurrent entries.
+        /// </summary>
+        /// <param name="initialCount">Initial number of entries.</param>
+        /// <param name="maxCount">Maximum number of concurrent entries.</param>
+        public ScopedSemaphoreSlim(int initialCount, int maxCount)
         {
-            _semaphore = new SemaphoreSlim(initialCount);
+            _semaphore = new SemaphoreSlim(initialCount, maxCount);
         }
 
+        /// <summary>
+        /// Creates an instance using the provided <see cref="SemaphoreSlim"/>.
+        /// </summary>
         public ScopedSemaphoreSlim(SemaphoreSlim semaphoreSlim)
         {
             _semaphore = semaphoreSlim;
+        }
+
+        /// <summary>
+        /// Gets the encapsulated <see cref="SemaphoreSlim"/> by this instance.
+        /// </summary>
+        /// <returns>The <see cref="SemaphoreSlim"/> object used by this instance.</returns>
+        public SemaphoreSlim GetEncapsulatedSemaphoreSlim()
+        {
+            base.ThrowIfDisposed();
+            return _semaphore;
         }
 
         public override SynchronizationScope CreateScope()

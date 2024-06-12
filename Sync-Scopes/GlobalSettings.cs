@@ -1,3 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo(@"Sync_Scopes.UnitTests")]
+#if DEBUG
+
+[assembly: InternalsVisibleTo(@"Sync_Scopes.UnitTests, PublicKey=0024000004800000940000000602000000240000525341310004000001000100e940a64e45acec1ca5a5b28777bcb655a46db72c8cdf6fee0e348cf0022ca53244132d2248164d954e23771544dda9de2c5c265ebc361b8583cf0a376556b69c1d62df44b748b4f61af7562727cd50f51049c41620abfe2069765d3b0e97ecf10cabac79d7458c8d1a5142a317fe15423875697462aa001f2ce39cd6027cf4a3")]
+
+#endif

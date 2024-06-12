@@ -4,6 +4,16 @@
     <TargetFrameworks>netstandard2.1;net8.0;net7.0</TargetFrameworks>
     <RootNamespace>Sync_Scopes</RootNamespace>
     <Nullable>enable</Nullable>
+    <SignAssembly>True</SignAssembly>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>Sync-Scopes</Title>
+    <Authors>Yashoja Lakmith</Authors>
+    <Company />
+    <Description>Sync-Scopes allows you to encapsulate common synchronization primitives in .NET to create and use synchronization scopes that follows the dispose pattern.</Description>
+    <PackageProjectUrl>https://github.com/YashojaLakmith/Sync-Scopes</PackageProjectUrl>
+    <PackageReadmeFile></PackageReadmeFile>
+    <RepositoryUrl>https://github.com/YashojaLakmith/Sync-Scopes</RepositoryUrl>
+    <AssemblyOriginatorKeyFile>obj\Sync-Scopes.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
 </Project>

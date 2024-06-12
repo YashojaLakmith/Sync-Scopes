@@ -3,6 +3,9 @@ using System.Threading;
 
 namespace Sync_Scopes
 {
+    /// <summary>
+    /// Encapsulates a <see cref="Monitor"/> based exclusive lock.
+    /// </summary>
     public class ScopedLock : ScopedPrimitive
     {
         private readonly object _lock = new object();

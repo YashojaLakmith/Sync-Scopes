@@ -2,10 +2,22 @@
 
 namespace Sync_Scopes
 {
+    /// <summary>
+    /// Represents an acquired synchronization scope by the calling thread.
+    /// </summary>
     public struct SynchronizationScope : IDisposable
     {
         internal event EventHandler? ScopeEnded;
         private bool _disposed;
+
+        /// <summary>
+        /// Releases the scope owned by the calling thread.
+        /// </summary>
+        public void Release()
+        {
+            OnScopeEnded();
+            ScopeEnded = null;
+        }
 
         public void Dispose()
         {
@@ -14,8 +26,7 @@ namespace Sync_Scopes
                 return;
             }
 
-            OnScopeEnded();
-            ScopeEnded = null;
+            Release();
             _disposed = true;
             GC.SuppressFinalize(this);
         }
